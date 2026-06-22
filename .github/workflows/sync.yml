@@ -5,7 +5,7 @@ permissions:
 
 on:
   schedule:
-    - cron: '0 0 * * *' # 每天北京时间早上 8 点自动运行 (UTC 0:00)
+    - cron: '0 0 * * 1' # 每天北京时间每周一早上 8 点自动运行 (UTC 0:00)
   workflow_dispatch: # 允许你在需要时手动触发更新
 
 jobs:
@@ -17,11 +17,11 @@ jobs:
     steps:
       # Step 1: 检出你的仓库
       - name: Checkout target repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # Step 2: 运行同步插件
       - name: Sync upstream changes
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.9.0
         with:
           target_sync_branch: master
           # 上游仓库地址
