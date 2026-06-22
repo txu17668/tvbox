@@ -1,0 +1,33 @@
+name: Upstream Sync
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每天北京时间早上 8 点自动运行 (UTC 0:00)
+  workflow_dispatch: # 允许你在需要时手动触发更新
+
+jobs:
+  sync_latest_from_upstream:
+    name: Sync latest commits from upstream
+    runs-on: ubuntu-latest
+    if: ${{ github.event.repository.fork }}
+
+    steps:
+      # Step 1: 检出你的仓库
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+
+      # Step 2: 运行同步插件
+      - name: Sync upstream changes
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.1
+        with:
+          target_sync_branch: master
+          # 上游仓库地址
+          upstream_sync_repo: qist/tvbox
+          upstream_sync_branch: master
+          target_repo_token: ${{ secrets.GITHUB_TOKEN }} # 自动获取，无需配置
+
+          # 如果发生冲突，测试是否能自动解决，不能则报错
+          test_mode: false
